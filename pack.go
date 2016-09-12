@@ -8,13 +8,10 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+	"github.com/kimiazhu/vfs"
 )
 
 type assetsData map[string][]byte
-
-type Packager struct {
-	FileFilter Filter
-}
 
 type Filter func(path string, patterns []string) bool
 
@@ -29,6 +26,10 @@ func DefaultFilter(path string, ignoreList []string) bool {
 	}
 
 	return false
+}
+
+type Packager struct {
+	FileFilter Filter
 }
 
 var DefaultPackager = &Packager{
@@ -50,6 +51,10 @@ func (p *Packager)ReadAsset(root string, ignoreError bool, ignoreList []string) 
 	}
 
 	return data, nil
+}
+
+func (p *Packager)Pack(root string, ignoreError bool, ignoreList []string) (vfs.FileSystem, error) {
+
 }
 
 func (p *Packager)walkFunc(data assetsData, ignoreError bool, ignoreList []string) filepath.WalkFunc {
