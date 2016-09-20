@@ -19,9 +19,12 @@ func (p* Packer)Read(path string) ([]byte, error) {
 	if err == nil {
 		// there is an internal filesystem, mount it firstly.
 		ns.Bind("/", fs, "/", vfs.BindReplace)
+		// mount the os filesystem
+		ns.Bind("/", vfs.OS("."), "/", vfs.BindAfter)
+	} else {
+		// Mount os only
+		ns.Bind("/", vfs.OS("."), "/", vfs.BindReplace)
 	}
-	// mount the os filesystem
-	ns.Bind("/", vfs.OS("."), "/", vfs.BindAfter)
 
 	f, err := ns.Open(path)
 	if err != nil {
